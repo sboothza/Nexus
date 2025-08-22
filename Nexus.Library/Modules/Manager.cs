@@ -31,6 +31,7 @@ public class Manager : IDisposable
     private void Run()
     {
         var schedules = _components.Values
+            .OfType<Schedule>()
             .Select(a => a)
             .Distinct()
             .ToList();
