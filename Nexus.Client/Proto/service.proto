@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+option csharp_namespace = "GrpcCaller";
+
+package caller;
+
+service Caller {
+  rpc Query (QueryRequest) returns (QueryResponse);
+}
+
+message QueryRequest {
+  string bindingName = 1;
+  string extraInfo = 2;
+  string data = 3;
+}
+
+message QueryResponse {
+  string extraInfo = 1;
+  string data = 2;
+}
+
+message Empty {
+}

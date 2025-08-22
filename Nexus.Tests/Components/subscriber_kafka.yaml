@@ -1,0 +1,12 @@
+Name: "SubscriberKafka"
+Type: "KafkaSubscriber"
+Topic: Test
+GroupId: Test
+BootstrapServers:
+  - "localhost:9092"
+BindingName: SubscribeCall
+    
+
+  
+
+    

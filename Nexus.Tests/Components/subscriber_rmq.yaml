@@ -1,0 +1,7 @@
+Name: "Subscribe"
+Type: "RabbitMqSubscriber"
+Url: "amqp://guest:guest@localhost/"
+QueueName: "Test"
+BindingName: SubscribeCall  
+
+    

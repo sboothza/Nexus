@@ -1,0 +1,7 @@
+Name: "PublishKafka"
+Type: "KafkaPublisher"
+BootstrapServers: 
+  - "localhost:9092"
+  
+
+    

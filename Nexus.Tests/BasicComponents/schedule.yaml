@@ -1,0 +1,5 @@
+Name: "ScheduleTest"
+Type: "Schedule"
+BindingName: "TestInvokeLocal"
+OnStartTrigger: ""
+Cron: "0,15,30,45 0-23 * * *"

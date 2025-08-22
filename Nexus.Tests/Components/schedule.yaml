@@ -1,0 +1,5 @@
+Name: "ScheduleTest"
+Type: "Schedule"
+BindingName: "BindingDoGet"
+OnStartTrigger: "0h05"
+Cron: "0 0-23 * * *"

@@ -1,0 +1,7 @@
+Name: "Publish"
+Type: "RabbitMqPublisher"
+Url: "amqp://guest:guest@localhost/"
+ExchangeName: ""
+  
+
+    

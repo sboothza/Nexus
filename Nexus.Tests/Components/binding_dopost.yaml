@@ -1,0 +1,17 @@
+Name: "BindingDoPost"
+Type: "HttpBinding"
+Url: "http://localhost:5266/dopost"
+TimeoutSeconds: 15
+AllowedExceptions: 3
+BreakDurationSeconds: 60
+Method: Post
+JsonNamingPolicy: camelcase
+Authentication:
+  AuthType: Basic
+  Username: bob
+  Password: bob
+  LoginUrl: "http://localhost:5266/doget"
+Headers:
+  Content-Type: "application/json"
+  X-API-Key: "4a57e814bbc5f8fa1df3e58e10e5455afa95d8c48c07fa92"
+    

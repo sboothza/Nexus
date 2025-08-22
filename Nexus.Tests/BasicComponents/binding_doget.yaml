@@ -1,0 +1,9 @@
+Name: "BindingDoGet"
+Type: "HttpBinding"
+Url: "http://localhost:5266/doget"
+TimeoutSeconds: 5
+Method: Get
+Headers:
+  Content-Type: "application/json"
+  X-API-Key: "4a57e814bbc5f8fa1df3e58e10e5455afa95d8c48c07fa92"
+    
