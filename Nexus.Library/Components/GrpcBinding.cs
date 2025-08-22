@@ -99,14 +99,13 @@ public class GrpcBinding : Binding
         }
         finally
         {
-            using (var activity = _activitySource?.StartActivity())
+            using (_activitySource?.StartActivity())
             {
                 stopwatch.Stop();
                 _callCount?.Add(1);
                 _callDuration?.Record(stopwatch.Elapsed.TotalSeconds);
                 _logger?.LogInformation("Call to {Name} {success} completed in {ElapsedMilliseconds}ms", Name,
                     success ? "successfully" : "unsuccessfully", stopwatch.ElapsedMilliseconds);
-                activity?.SetTag("greeting", "Hello World!");
             }
         }
     }

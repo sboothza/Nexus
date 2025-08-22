@@ -41,7 +41,7 @@ public class Manager : IDisposable
             foreach (var item in schedules)
                 try
                 {
-                    item.Ping();
+                    _ = item.Ping();
                 }
                 catch (Exception e)
                 {
