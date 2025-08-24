@@ -53,11 +53,11 @@ public class KafkaPublisher : Publisher
     {
         try
         {
-            if (string.IsNullOrEmpty(message.Data) || string.IsNullOrEmpty(message.Metadata["topic"]))
+            if (string.IsNullOrEmpty(message.Data) || string.IsNullOrEmpty(message.ExtraInfo["topic"]))
                 throw new Exception("Topic and Data must be set");
             
             var stopwatch = Stopwatch.StartNew();
-            var deliveryResult = await _producer!.ProduceAsync(message.Metadata["topic"], new Message<Null, string>
+            var deliveryResult = await _producer!.ProduceAsync(message.ExtraInfo["topic"], new Message<Null, string>
             {
                 Value = message.Data!,
             });

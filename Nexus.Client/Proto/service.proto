@@ -10,13 +10,14 @@ service Caller {
 
 message QueryRequest {
   string bindingName = 1;
-  string extraInfo = 2;
+  map<string, string> extraInfo = 2;
   string data = 3;
 }
 
 message QueryResponse {
-  string extraInfo = 1;
-  string data = 2;
+  bool success = 1;
+  map<string, string> extraInfo = 2;
+  string data = 3;
 }
 
 message Empty {

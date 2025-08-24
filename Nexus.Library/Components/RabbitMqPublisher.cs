@@ -52,7 +52,7 @@ public class RabbitMqPublisher : Publisher
     {
         try
         {
-            if (string.IsNullOrEmpty(message.Data) || string.IsNullOrEmpty(message.Metadata["topic"]))
+            if (string.IsNullOrEmpty(message.Data) || string.IsNullOrEmpty(message.ExtraInfo["topic"]))
                 throw new Exception("Topic and Data must be set");
             
             var props = new BasicProperties
@@ -62,7 +62,7 @@ public class RabbitMqPublisher : Publisher
             };
             var stopwatch = Stopwatch.StartNew();
             var bytes = Encoding.UTF8.GetBytes(message.Data);
-            await _channel!.BasicPublishAsync(ExchangeName!, message.Metadata["topic"], mandatory: true,
+            await _channel!.BasicPublishAsync(ExchangeName!, message.ExtraInfo["topic"], mandatory: true,
                 basicProperties: props, body: bytes);
 
             using (_activitySource?.StartActivity())

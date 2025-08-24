@@ -114,7 +114,7 @@ public class Tests
                         {
                             "topic", "Test"
                         }
-                    }.ExpandToString()
+                    }
                 }).Wait();
             }
         }
@@ -146,7 +146,7 @@ public class Tests
                         {
                             "topic", "Test"
                         }
-                    }.ExpandToString()
+                    }
                 }).Wait();
             }
         }
@@ -180,7 +180,7 @@ public class Tests
                         {
                             "topic", "Test"
                         }
-                    }.ExpandToString()
+                    }
                 }).Wait();
                 Thread.Sleep(1000);
 
@@ -218,7 +218,7 @@ public class Tests
                         {
                             "topic", "Test"
                         }
-                    }.ExpandToString()
+                    }
                 }).Wait();
 
                 tc = new TestClass
@@ -236,7 +236,7 @@ public class Tests
                         {
                             "topic", "Test"
                         }
-                    }.ExpandToString()
+                    }
                 }).Wait();
 
                 tc = new TestClass
@@ -253,7 +253,7 @@ public class Tests
                         {
                             "topic", "Test"
                         }
-                    }.ExpandToString()
+                    }
                 }).Wait();
 
                 Thread.Sleep(5000);

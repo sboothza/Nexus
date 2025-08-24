@@ -14,11 +14,11 @@ public class RabbitMqSubscriber : Subscriber
     private IChannel? _channel;
     private Counter<int>? _receiveCount;
     private string? _consumerTag;
-    
+
     public override string Type => "RabbitMqSubscriber";
     public string? QueueName { get; set; }
     public string? Url { get; set; }
-    
+
 
     [JsonConstructor]
     public RabbitMqSubscriber()
@@ -32,10 +32,10 @@ public class RabbitMqSubscriber : Subscriber
     public override void Configure(Manager manager)
     {
         base.Configure(manager);
-        
+
         if (string.IsNullOrEmpty(Name) || string.IsNullOrEmpty(QueueName) || string.IsNullOrEmpty(Url))
             throw new Exception("Name, QueueName and Url must be set");
-        
+
         var factory = new ConnectionFactory
         {
             Uri = new Uri(Url!)
@@ -43,7 +43,7 @@ public class RabbitMqSubscriber : Subscriber
 
         _connection = factory.CreateConnectionAsync().Result;
         _channel = _connection.CreateChannelAsync().Result;
-        
+
         var consumer = new AsyncEventingBasicConsumer(_channel);
         consumer.ReceivedAsync += async (ch, ea) =>
         {
@@ -53,11 +53,12 @@ public class RabbitMqSubscriber : Subscriber
                 _logger?.LogInformation("{Name} received message for {RoutingKey}", Name, ea.RoutingKey);
                 activity?.SetTag("greeting", "Hello World!");
             }
+
             var body = ea.Body.ToArray();
             var bodyString = Encoding.UTF8.GetString(body);
             var message = new DataMessage
             {
-                ExtraInfo = ea.RoutingKey,
+                ExtraInfo = new Dictionary<string, string>() { { "topic", ea.RoutingKey } },
                 Data = bodyString
             };
             await _manager!.Query(BindingName!, message);

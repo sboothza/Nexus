@@ -51,7 +51,7 @@ public class HttpBinding : Binding
     private JsonNamingPolicy? _jsonNamingPolicy;
 
     // public Authentication? Authentication { get; set; }
-    public ExtraInfo? Headers { get; set; }
+    public Dictionary<string, string>? Headers { get; set; }
     private AsyncPolicy? _circuitBreakerPolicy;
 
     private Counter<int>? _callCount;
@@ -177,7 +177,7 @@ public class HttpBinding : Binding
                 return new DataMessage
                 {
                     Data = jsonResult,
-                    ExtraInfo = responseMessage.Headers.ToSeparatedString()
+                    ExtraInfo = responseMessage.Headers.ToDict()
                 };
             }
 

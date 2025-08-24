@@ -25,14 +25,14 @@ public class KafkaSubscriber : Subscriber
     public KafkaSubscriber(ILogger logger) : base(logger)
     {
     }
-    
+
     public override void Configure(Manager manager)
     {
         base.Configure(manager);
-        
+
         if (BootstrapServers is null || BootstrapServers.Length == 0)
             throw new Exception("BootstrapServers must be set");
-        
+
         var servers = string.Join(',', BootstrapServers);
         var config = new ConsumerConfig
         {
@@ -46,7 +46,7 @@ public class KafkaSubscriber : Subscriber
         _consumerThread = new Thread(ConsumeMessages);
         _consumerThread.Start();
     }
-    
+
     public override void CreateMetrics(Meter meter)
     {
         base.CreateMetrics(meter);
@@ -72,7 +72,7 @@ public class KafkaSubscriber : Subscriber
                     var json = cr?.Message.Value!;
                     var message = new DataMessage
                     {
-                        ExtraInfo = cr?.Topic!,
+                        ExtraInfo = new Dictionary<string, string>() { { "topic", cr?.Topic! } },
                         Data = json
                     };
                     _manager!.Query(BindingName!, message).Wait();
@@ -88,7 +88,7 @@ public class KafkaSubscriber : Subscriber
             _consumer?.Close(); // Ensure the consumer leaves the group cleanly
         }
     }
-    
+
     public override Task<DataMessage?> Query(DataMessage input)
     {
         return Task.FromResult<DataMessage?>(null);

@@ -21,18 +21,15 @@ public class Client : IDisposable
         };
     }
 
-    public async Task<TR?> Query<T, TR>(string bindingName, T input, ExtraInfo? extraInfo = null)
+    public async Task<TR?> Query<T, TR>(string bindingName, T input, Dictionary<string, string>? extraInfo = null)
     {
-        var extra = "";
-        if (extraInfo is not null)
-            extra = JsonSerializer.Serialize(input, _options);
-
         var request = new QueryRequest
         {
             BindingName = bindingName,
             Data = JsonSerializer.Serialize(input),
-            ExtraInfo = extra
         };
+        
+        extraInfo.ToMap(request.ExtraInfo);
         var response = await _client.QueryAsync(request);
         if (string.IsNullOrEmpty(response.Data))
             return default;

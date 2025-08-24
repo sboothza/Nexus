@@ -11,16 +11,16 @@ public class CallerService(ILogger<CallerService> logger, Manager manager) : Cal
 {
     private readonly ILogger<CallerService> _logger = logger;
 
-    public async override Task<QueryResponse> Query(QueryRequest request, ServerCallContext context)
+    public override async Task<QueryResponse> Query(QueryRequest request, ServerCallContext context)
     {
         var result = await manager.Query(request.BindingName, request.ToDataMessage());
         if (result != null)
-            return new QueryResponse
-            {
-                ExtraInfo = result.ExtraInfo,
-                Data = result.Data,
-            };
+        {
+            var response = new QueryResponse();
+            result.ExtraInfo.ToMap(response.ExtraInfo);
+            response.Data = result.Data;
+        }
+
         return new QueryResponse();
     }
-
 }

@@ -1,6 +1,7 @@
 using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using Google.Protobuf.Collections;
 using GrpcCaller;
 using Nexus.Library;
 
@@ -17,9 +18,9 @@ public static class Common
         return string.Join(";", pairs);
     }
     
-    public static ExtraInfo ToDictionary(this string? data)
+    public static Dictionary<string, string> ToDictionary(this string? data)
     {
-        var result = new ExtraInfo();
+        var result = new Dictionary<string, string>();
 
         if (string.IsNullOrWhiteSpace(data))
             return result;
@@ -48,7 +49,7 @@ public static class Common
             _ => JsonNamingPolicy.CamelCase
         };
 
-    public static void AddHeaders(this ExtraInfo headers, HttpRequestHeaders requestHeaders)
+    public static void AddHeaders(this Dictionary<string, string> headers, HttpRequestHeaders requestHeaders)
     {
         foreach (var header in headers!)
         {
@@ -72,12 +73,35 @@ public static class Common
         return new DataMessage
         {
             Data = request.Data,
-            ExtraInfo = request.ExtraInfo
+            ExtraInfo = request.ExtraInfo.ToDictionary(),
         };
+    }
+    
+    public static QueryRequest ToQueryRequest(this DataMessage message)
+    {
+        var request = new QueryRequest
+        {
+            Data = message.Data
+        };
+        message.ExtraInfo.ToMap(request.ExtraInfo);
+        return request;
+    }
+
+    public static Dictionary<T, TR> ToDictionary<T,TR>(this MapField<T, TR> map) where T : notnull
+    {
+        return map.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+    }
+    
+    public static void ToMap<T,TR>(this Dictionary<T, TR>? dict, MapField<T, TR> map) where T : notnull
+    {
+        map.Clear();
+        if (dict is null || dict.Count == 0)
+            return;
+        
+        foreach (var kvp in dict)
+        {
+            map.Add(kvp.Key, kvp.Value);
+        }
     }
 }
 
-public class ExtraInfo : Dictionary<string, string>
-{
-
-}

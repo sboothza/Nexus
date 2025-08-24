@@ -7,7 +7,7 @@ public class TestClient
     {
         var client = new Client.Client("http://localhost:50051");
         var result= client.Query<ApiRequest, ApiResponse>("BindingDoPost", new ApiRequest { Name = "Stephen" }).Result;
-        Console.WriteLine(result.Status);
+        Console.WriteLine(result!.Status);
 
     }
 }

@@ -14,7 +14,7 @@ public static class Common
         var pairs = headers.Select(pair => $"{pair.Key}={pair.Value.FirstOrDefault()}");
         return string.Join(";", pairs);
     }
-    
+
     public static Dictionary<string, string> ToDictionary(this string? data)
     {
         var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
@@ -64,9 +64,14 @@ public static class Common
             }
         }
     }
-}
 
-public class ExtraInfo : Dictionary<string, string>
-{
-
+    public static Dictionary<string, string> ToDict(this HttpRequestHeaders headers)
+    {
+        return headers.ToDictionary(header => header.Key, header => header.Value.FirstOrDefault()!);
+    }
+    
+    public static Dictionary<string, string> ToDict(this HttpResponseHeaders headers)
+    {
+        return headers.ToDictionary(header => header.Key, header => header.Value.FirstOrDefault()!);
+    }
 }
