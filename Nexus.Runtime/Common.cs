@@ -76,6 +76,22 @@ public static class Common
             ExtraInfo = request.ExtraInfo.ToDictionary(),
         };
     }
+
+    public static QueryResponse ToQueryResponse(this DataMessage message)
+    {
+        var response = new QueryResponse
+        {
+            Success = message.Success,
+            Data = message.Data
+        };
+        message.ExtraInfo.ToMap(response.ExtraInfo);
+        if (message is ErrorMessage error)
+        {
+            response.ExtraInfo["error"] = error.Error;
+            response.ExtraInfo["stackTrace"] = error.StackTrace;
+        }
+        return response;
+    }
     
     public static QueryRequest ToQueryRequest(this DataMessage message)
     {

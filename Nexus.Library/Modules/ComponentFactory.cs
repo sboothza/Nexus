@@ -7,7 +7,6 @@ namespace Nexus.Library.Modules;
 
 public static class ComponentFactory
 {
-    // ReSharper disable once InconsistentNaming
     private static readonly Dictionary<string, Type> _components = new();
 
     public static List<string> ComponentNames => _components.Keys.ToList();
@@ -18,8 +17,9 @@ public static class ComponentFactory
         return assemblies.ToList();
     }
 
-    public static void RegisterComponents(ILogger? logger)
+    public static void Register(ILogger? logger)
     {
+        _components.Clear();
         var assemblies = GetAllAssemblies();
         foreach (var asm in assemblies)
         {

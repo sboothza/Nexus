@@ -11,30 +11,7 @@ using Polly.CircuitBreaker;
 
 namespace Nexus.Library.Components;
 
-public enum AuthType
-{
-    None,
-    Basic,
-    Token
-}
 
-public class Authentication
-{
-
-    public AuthType AuthType { get; set; } = AuthType.None;
-
-    public string Username { get; set; } = "";
-
-    public string Password { get; set; } = "";
-
-    public string LoginUrl { get; set; } = "";
-
-    public string BasicAuthHeader()
-    {
-        var userpass = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{Username}:{Password}"));
-        return $"Authorization: Basic {userpass}";
-    }
-}
 
 public class HttpBinding : Binding
 {
@@ -50,7 +27,7 @@ public class HttpBinding : Binding
 
     private JsonNamingPolicy? _jsonNamingPolicy;
 
-    // public Authentication? Authentication { get; set; }
+    public Authentication? Authentication { get; set; }
     public Dictionary<string, string>? Headers { get; set; }
     private AsyncPolicy? _circuitBreakerPolicy;
 
@@ -113,8 +90,8 @@ public class HttpBinding : Binding
         if (_circuitBreakerPolicy == null)
             throw new Exception("Circuit breaker could not be created");
 
-        // if (Authentication == null)
-        //     throw new Exception("Authentication must be set");
+        if (Authentication == null)
+            throw new Exception("Authentication must be set");
     }
 
     public override void CreateMetrics(Meter meter)
@@ -141,21 +118,12 @@ public class HttpBinding : Binding
             RequestUri = _requestUri
         };
 
-        // if (Authentication!.AuthType == AuthType.Basic)
-        //     message.Headers.Add("Authorization", Authentication.BasicAuthHeader);
-
-        // var jsonData = JsonSerializer.Serialize(input, new JsonSerializerOptions
-        // {
-        //     PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-        //     WriteIndented = true,
-        // });
-
-        // message.Content = new StringContent(jsonData);
-
-        // message.Content = JsonContent.Create(input.Data, MediaTypeHeaderValue.Parse("application/json"), _jsonOptions);
         message.Content = new StringContent(input.Data!, Encoding.UTF8, "application/json");
 
         Headers!.AddHeaders(message.Headers);
+        
+        if (Authentication!.AuthType != AuthType.None)
+            message.Headers.Add("Authorization", Authentication.GetAuthHeader());
 
         try
         {
@@ -176,12 +144,22 @@ public class HttpBinding : Binding
 
                 return new DataMessage
                 {
+                    Success = true,
                     Data = jsonResult,
                     ExtraInfo = responseMessage.Headers.ToDict()
                 };
             }
-
-            return new DataMessage();
+            else
+            {
+                _logger?.LogError("Error occurred while executing request: {StatusCode}",
+                    responseMessage.StatusCode);
+                return new ErrorMessage
+                {
+                    Error = responseMessage.ReasonPhrase,
+                    Success = false,
+                    ExtraInfo = responseMessage.Headers.ToDict()
+                };
+            }
         }
         catch (BrokenCircuitException ex)
         {

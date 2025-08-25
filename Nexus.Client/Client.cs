@@ -28,14 +28,55 @@ public class Client : IDisposable
             BindingName = bindingName,
             Data = JsonSerializer.Serialize(input),
         };
-        
+
         extraInfo.ToMap(request.ExtraInfo);
         var response = await _client.QueryAsync(request);
+        if (!response.Success)
+        {
+            var ex = new RemoteException(response.ExtraInfo["error"]!, response.ExtraInfo["stackTrace"]!);
+            throw ex;
+        }
+
         if (string.IsNullOrEmpty(response.Data))
             return default;
         Console.WriteLine(typeof(TR).Name);
         var obj = JsonSerializer.Deserialize<TR>(response.Data, _options);
         return obj;
+    }
+
+    public async Task<string> GetValue(string storeName, string key)
+    {
+        var request = new QueryRequest
+        {
+            BindingName = storeName,
+        };
+        request.ExtraInfo.Add("key", key);
+        request.ExtraInfo.Add("operation", "get");
+        var response = await _client.QueryAsync(request);
+        if (!response.Success)
+        {
+            var ex = new RemoteException(response.ExtraInfo["error"]!, response.ExtraInfo["stackTrace"]!);
+            throw ex;
+        }
+
+        return response.Data;
+    }
+
+    public async Task SetValue(string storeName, string key, string value)
+    {
+        var request = new QueryRequest
+        {
+            BindingName = storeName,
+        };
+        request.ExtraInfo.Add("key", key);
+        request.ExtraInfo.Add("operation", "set");
+        request.Data = value;
+        var response = await _client.QueryAsync(request);
+        if (!response.Success)
+        {
+            var ex = new RemoteException(response.ExtraInfo["error"]!, response.ExtraInfo["stackTrace"]!);
+            throw ex;
+        }
     }
 
     public void Dispose()

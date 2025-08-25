@@ -1,6 +1,8 @@
 using System.Net.Http.Headers;
+using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using Nexus.Library.Components;
 
 namespace Nexus.Library;
 
@@ -74,4 +76,6 @@ public static class Common
     {
         return headers.ToDictionary(header => header.Key, header => header.Value.FirstOrDefault()!);
     }
+    
+    
 }

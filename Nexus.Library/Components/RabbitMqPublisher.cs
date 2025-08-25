@@ -52,7 +52,7 @@ public class RabbitMqPublisher : Publisher
     {
         try
         {
-            if (string.IsNullOrEmpty(message.Data) || string.IsNullOrEmpty(message.ExtraInfo["topic"]))
+            if (string.IsNullOrEmpty(message.Data) || string.IsNullOrEmpty(message.ExtraInfo?["topic"]))
                 throw new Exception("Topic and Data must be set");
             
             var props = new BasicProperties

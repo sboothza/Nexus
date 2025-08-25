@@ -15,6 +15,7 @@
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
+      <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.1" />
       <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.6" />
       <PackageReference Include="Microsoft.Recognizers.Text.DateTime" Version="1.8.13" />
       <PackageReference Include="NCrontab.Signed" Version="3.3.3" />
@@ -23,6 +24,7 @@
       <PackageReference Include="prometheus-net.AspNetCore" Version="8.2.1" />
       <PackageReference Include="prometheus-net.AspNetCore.HealthChecks" Version="8.2.1" />
       <PackageReference Include="RabbitMQ.Client" Version="7.1.2" />
+      <PackageReference Include="StackExchange.Redis" Version="2.9.11" />
       <PackageReference Include="YamlDotNet" Version="16.3.0" />
     </ItemGroup>
 

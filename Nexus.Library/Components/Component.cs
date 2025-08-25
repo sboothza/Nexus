@@ -36,8 +36,17 @@ public abstract class Component : IDisposable
         _logger = logger;
     }
     
+    /// <summary>
+    /// This is only implemented for concrete classes that have this functionality.
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
     public abstract Task<DataMessage?> Query(DataMessage input);
 
+    /// <summary>
+    /// All concrete classes should implement this method.
+    /// </summary>
+    /// <returns></returns>
     public abstract Task Ping();
 
     public virtual void Dispose()

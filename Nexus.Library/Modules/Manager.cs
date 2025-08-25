@@ -14,7 +14,7 @@ public class Manager : IDisposable
     public Manager(string folder, ILogger logger, Meter meter)
     {
         _logger = logger;
-        var components = ConfigParser.ParseList(folder, _logger, meter, this);
+        var components = ConfigParser.ParseComponentFolder(folder, _logger, meter, this);
         _components = components.ToDictionary(a => a!.Name!, a => a!);
 
         _schedulerThread = new Thread(Run);
@@ -30,15 +30,9 @@ public class Manager : IDisposable
 
     private void Run()
     {
-        var schedules = _components.Values
-            .OfType<Schedule>()
-            .Select(a => a)
-            .Distinct()
-            .ToList();
-
         while (!_terminate)
         {
-            foreach (var item in schedules)
+            foreach (var item in _components.Values)
                 try
                 {
                     _ = item.Ping();
@@ -58,14 +52,27 @@ public class Manager : IDisposable
     public async Task<DataMessage?> Query(string name, DataMessage input)
     {
         _logger.LogInformation("Invoking {Name} with input {Input}", name, input);
-        if (!_components.TryGetValue(name, out var binding))
+        if (!_components.TryGetValue(name, out var component))
         {
             _logger.LogError("Component {Name} not found", name);
             throw new Exception($"Component {name} not found");
         }
 
-        var output = await binding.Query(input);
-        return output;
+        try
+        {
+            var output = await component.Query(input);
+            return output;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error invoking {Name}", name);
+            return new ErrorMessage
+            {
+                Success = false,
+                Error = e.Message,
+                StackTrace = e.StackTrace
+            };
+        }
     }
 
     private void ReleaseUnmanagedResources()

@@ -13,7 +13,7 @@ public static class ConfigParser
         .IgnoreUnmatchedProperties()
         .Build();
 
-    public static Component? Parse(string configContent, ILogger logger, Meter meter, Manager manager)
+    public static Component? ParseComponent(string configContent, ILogger logger, Meter meter, Manager manager)
     {
         try
         {
@@ -36,14 +36,14 @@ public static class ConfigParser
         }
     }
 
-    public static List<Component?> ParseList(string folder, ILogger logger, Meter meter, Manager manager)
+    public static List<Component?> ParseComponentFolder(string folder, ILogger logger, Meter meter, Manager manager)
     {
         var components = new List<Component?>();
         foreach (var file in Directory.GetFiles(folder, "*.yaml"))
         {
             logger.LogInformation("Parsing component file: {File}", file);
             var yaml = File.ReadAllText(file);
-            var component = Parse(yaml, logger, meter, manager);
+            var component = ParseComponent(yaml, logger, meter, manager);
             components.Add(component);
         }
 

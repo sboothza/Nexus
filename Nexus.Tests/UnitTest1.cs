@@ -27,11 +27,11 @@ public class Tests
         {
             ILogger logger = factory.CreateLogger("Program");
             var meter = new Meter("Program", "1.0.0");
-            ComponentFactory.RegisterComponents(logger);
+            ComponentFactory.Register(logger);
             var yaml = File.ReadAllText("config.yaml");
             using (var manager = new Manager("Components", logger, meter))
             {
-                var component = ConfigParser.Parse(yaml, logger, meter, manager);
+                var component = ConfigParser.ParseComponent(yaml, logger, meter, manager);
                 Console.WriteLine(component);
             }
         }
@@ -47,10 +47,10 @@ public class Tests
         {
             ILogger logger = factory.CreateLogger("Program");
             var meter = new Meter("Program", "1.0.0");
-            ComponentFactory.RegisterComponents(logger);
+            ComponentFactory.Register(logger);
             using (var manager = new Manager("Components", logger, meter))
             {
-                var components = ConfigParser.ParseList("Components", logger, meter, manager);
+                var components = ConfigParser.ParseComponentFolder("Components", logger, meter, manager);
                 Console.WriteLine(components.ExpandToString());
             }
         }
@@ -65,7 +65,7 @@ public class Tests
         {
             ILogger logger = factory.CreateLogger("Program");
             var meter = new Meter("Program", "1.0.0");
-            ComponentFactory.RegisterComponents(logger);
+            ComponentFactory.Register(logger);
             using (var manager = new Manager("Components", logger, meter))
             {
                 var response = manager.Query("BindingDoGet", new DataMessage
@@ -96,7 +96,7 @@ public class Tests
         {
             ILogger logger = factory.CreateLogger("Program");
             var meter = new Meter("Program", "1.0.0");
-            ComponentFactory.RegisterComponents(logger);
+            ComponentFactory.Register(logger);
             using (var manager = new Manager("Components", logger, meter))
             {
                 var tc = new TestClass
@@ -129,7 +129,7 @@ public class Tests
         {
             ILogger logger = factory.CreateLogger("Program");
             var meter = new Meter("Program", "1.0.0");
-            ComponentFactory.RegisterComponents(logger);
+            ComponentFactory.Register(logger);
             using (var manager = new Manager("Components", logger, meter))
             {
                 var tc = new TestClass
@@ -161,7 +161,7 @@ public class Tests
         {
             var logger = factory.CreateLogger("Program");
             var meter = new Meter("Program", "1.0.0");
-            ComponentFactory.RegisterComponents(logger);
+            ComponentFactory.Register(logger);
             using (var manager = new Manager("Components", logger, meter))
             {
                 var receivedMessage = false;
@@ -198,7 +198,7 @@ public class Tests
         {
             var logger = factory.CreateLogger("Program");
             var meter = new Meter("Program", "1.0.0");
-            ComponentFactory.RegisterComponents(logger);
+            ComponentFactory.Register(logger);
             using (var manager = new Manager("Components", logger, meter))
             {
                 var receivedMessages = 0;
@@ -292,7 +292,7 @@ public class Tests
         {
             var logger = factory.CreateLogger("Program");
             var meter = new Meter("Program", "1.0.0");
-            ComponentFactory.RegisterComponents(logger);
+            ComponentFactory.Register(logger);
             using (var manager = new Manager("BasicComponents", logger, meter))
             {
                 var ti = new TestInvokeLocal();

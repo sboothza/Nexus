@@ -58,7 +58,7 @@ class Program
 
         var app = builder.Build();
 
-        ComponentFactory.RegisterComponents(app.Services.GetService<ILogger<Program>>());
+        ComponentFactory.Register(app.Services.GetService<ILogger<Program>>());
         app.Services.GetRequiredService<Manager>(); //start up scheduler and subscribers
 
         app.UseRouting();
